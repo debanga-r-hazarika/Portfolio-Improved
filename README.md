@@ -1,6 +1,6 @@
 # Modern Tech Portfolio
 
-A sleek, modern portfolio website built with React, TypeScript, and Tailwind CSS, designed to showcase technical projects and skills in an engaging way.
+A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features a clean design, dark mode support, and smooth animations to showcase professional work and skills.
 
 ## 🚀 Features
 
@@ -12,12 +12,14 @@ A sleek, modern portfolio website built with React, TypeScript, and Tailwind CSS
 - **Smooth Animations**: Subtle animations and transitions for enhanced user experience
 - **SEO Optimized**: Meta tags and semantic HTML for better search engine visibility
 
-## 🛠️ Tech Stack
+## 🛠️ Technologies
 
-- React 18 with TypeScript
-- Tailwind CSS for styling
-- Lucide React for icons
-- Vite for blazing fast development
+- **React**: Frontend library for building user interfaces
+- **TypeScript**: Type-safe JavaScript for better development experience
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development
+- **Vite**: Next-generation frontend tooling for faster development
+- **Lucide Icons**: Beautiful, consistent icon set
+- **React Context**: State management for theme and authentication
 
 ## 📦 Project Structure
 
@@ -35,46 +37,45 @@ src/
 
 ## 🚀 Getting Started
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone [repository-url]
+   cd project
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
-3. Start the development server:
+
+3. **Start development server**
    ```bash
    npm run dev
    ```
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
 
-## 🔧 Development
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+## 🎨 Customization
 
-## 📱 Responsive Design
+- **Theme**: Modify `tailwind.config.js` to customize colors, fonts, and other design tokens
+- **Content**: Update content in the components under `src/components/sections`
+- **Styling**: Adjust styles using Tailwind CSS classes or modify component styles
 
-The portfolio is designed to be fully responsive with breakpoints:
-- Mobile: < 640px
-- Tablet: 640px - 1024px
-- Desktop: > 1024px
+## 📝 License
 
-## 🎨 Design Principles
+This project is open source and available under the MIT License.
 
-- Clean and minimal interface
-- Clear typography hierarchy
-- Consistent spacing and alignment
-- Subtle animations for interactivity
-- High contrast for accessibility
+## 🤝 Contributing
 
-## 🌐 Browser Support
+Contributions, issues, and feature requests are welcome! Feel free to check issues page.
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+## 📧 Contact
 
-## 📄 License
+Debanga Raz - [debangaraz2000@gmail.com](mailto:debangaraz2000@gmail.com)
 
-MIT License - feel free to use this template for your own portfolio!
+---
+
+Built with ❤️ by Debanga Raz

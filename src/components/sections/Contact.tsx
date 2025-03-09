@@ -70,7 +70,7 @@ export default function Contact() {
                   className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   <Mail className="w-5 h-5 mr-3" />
-                  Debangaraz2000@gmail.com
+                  debangaraz2000@gmail.com
                 </a>
                 <a 
                   href="tel:+919101227640"
