@@ -1,4 +1,5 @@
 import React from 'react';
+import { useScrollAnimation } from '../../utils/animation';
 
 const skills = {
   "Technical": [
@@ -22,19 +23,19 @@ export default function Skills() {
     <section id="skills" className="py-20 bg-gray-50 dark:bg-gray-800/50">
       <div className="container mx-auto px-6 flex flex-col items-center relative">
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/30 to-transparent dark:from-indigo-900/10 pointer-events-none" />
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-900 dark:text-white">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-900 dark:text-white" ref={useScrollAnimation({ animation: 'fade-up' })}>
           Skills & Expertise
         </h2>
         
         <div className="grid md:grid-cols-2 gap-x-20 gap-y-16 w-full max-w-6xl">
-          {Object.entries(skills).map(([category, items]) => (
-            <div key={category} className="flex flex-col items-center backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 rounded-2xl p-8 shadow-xl dark:shadow-gray-900/30">
+          {Object.entries(skills).map(([category, items], categoryIndex) => (
+            <div key={category} className="flex flex-col items-center backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 rounded-2xl p-8 shadow-xl dark:shadow-gray-900/30" ref={useScrollAnimation({ animation: 'fade-up', delay: 200 + (categoryIndex * 200) })}>
               <h3 className="text-2xl font-bold mb-10 bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
                 {category}
               </h3>
               <div className="space-y-8 w-full">
                 {items.map((skill, index) => (
-                  <div key={index} className="group">
+                  <div key={index} className="group" ref={useScrollAnimation({ animation: 'fade-up', delay: 400 + (index * 100) })}>
                     <div className="flex justify-between mb-3">
                       <span className="text-gray-700 dark:text-gray-300 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                         {skill.name}

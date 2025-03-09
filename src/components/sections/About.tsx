@@ -1,16 +1,17 @@
 import React from 'react';
 import { Code2, Palette, Rocket, Zap } from 'lucide-react';
+import { useScrollAnimation } from '../../utils/animation';
 
 export default function About() {
   return (
     <section id="about" className="py-20 bg-gray-50 dark:bg-gray-800/50">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-900 dark:text-white">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-900 dark:text-white" ref={useScrollAnimation({ animation: 'fade-up' })}>
           About Me
         </h2>
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
+          <div className="space-y-6" ref={useScrollAnimation({ animation: 'fade-up', delay: 200 })}>
             <p className="text-lg text-gray-600 dark:text-gray-300"> 
               I'm a tech entrepreneur with a unique blend of full-stack development, cybersecurity, and business acumen. I specialize in building secure, scalable solutions that bridge the gap between technology innovation and business needs.
             </p>
@@ -19,7 +20,7 @@ export default function About() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6" ref={useScrollAnimation({ animation: 'fade-up', delay: 400 })}>
             {[
               {
                 icon: <Code2 className="w-8 h-8" />,
@@ -42,7 +43,7 @@ export default function About() {
                 description: "Tech-driven solutions"
               }
             ].map((item, index) => (
-              <div key={index} className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div key={index} className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow" ref={useScrollAnimation({ animation: 'fade-up', delay: 400 + (index * 100) })}>
                 <div className="text-indigo-600 dark:text-indigo-400 mb-4">
                   {item.icon}
                 </div>

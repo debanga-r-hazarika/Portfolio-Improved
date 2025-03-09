@@ -1,5 +1,6 @@
 import React from 'react';
 import { ExternalLink, Github } from 'lucide-react';
+import LazyImage from '../LazyImage';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Projects() {
@@ -16,7 +17,7 @@ export default function Projects() {
           {projects.map((project, index) => (
             <div key={project.id} className="group relative bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden">
               <div className="aspect-video overflow-hidden">
-                <img 
+                <LazyImage 
                   src={project.image} 
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { Menu, X, Moon, Sun, Code, Terminal } from 'lucide-react';
 import Logo from '../Logo';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
+  const { isDarkMode, toggleDarkMode } = useTheme();
 
   return (
     <header className="fixed w-full top-0 z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur supports-[backdrop-filter]:bg-white/50 dark:supports-[backdrop-filter]:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">

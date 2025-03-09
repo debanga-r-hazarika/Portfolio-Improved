@@ -7,6 +7,7 @@ import Skills from './components/sections/Skills';
 import Contact from './components/sections/Contact';
 import FloatingNav from './components/layout/FloatingNav';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ProjectsAdmin from './components/admin/ProjectsAdmin';
 import AdminLogin from './components/admin/AdminLogin';
 import { useAuth } from './contexts/AuthContext';
@@ -41,13 +42,15 @@ function MainLayout() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainLayout />} />
-          <Route path="/admin/login" element={<AdminLoginWrapper />} />
-          <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
-        </Routes>
-      </Router>
+      <ThemeProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<MainLayout />} />
+            <Route path="/admin/login" element={<AdminLoginWrapper />} />
+            <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

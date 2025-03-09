@@ -1,19 +1,20 @@
 import React from 'react';
 import { Github, Linkedin, Mail, ChevronDown, FileDown } from 'lucide-react';
+import { useScrollAnimation } from '../../utils/animation';
 
 export default function Hero() {
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-24 mt-16">
         <div className="text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6" ref={useScrollAnimation({ animation: 'fade-up' })}>
             Hi, I'm <span className="text-indigo-600 dark:text-indigo-400">Debanga Raz</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto" ref={useScrollAnimation({ animation: 'fade-up', delay: 200 })}>
             A tech entrepreneur and developer crafting innovative solutions
           </p>
           
-          <div className="mb-12">
+          <div className="mb-12" ref={useScrollAnimation({ animation: 'fade-up', delay: 400 })}>
             <a
               href="/resume.pdf"
               download
@@ -24,7 +25,7 @@ export default function Hero() {
             </a>
           </div>
           
-          <div className="flex justify-center space-x-6 mb-12">
+          <div className="flex justify-center space-x-6 mb-12" ref={useScrollAnimation({ animation: 'fade-up', delay: 600 })}>
             <a
               href="https://github.com/yourusername"
               target="_blank"
@@ -56,6 +57,7 @@ export default function Hero() {
             href="#about"
             className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
             aria-label="Scroll to about section"
+            ref={useScrollAnimation({ animation: 'fade-up', delay: 800 })}
           >
             <ChevronDown className="w-6 h-6 animate-bounce" />
           </a>
