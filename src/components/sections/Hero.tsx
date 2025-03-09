@@ -27,7 +27,7 @@ export default function Hero() {
           
           <div className="flex justify-center space-x-6 mb-12" ref={useScrollAnimation({ animation: 'fade-up', delay: 600 })}>
             <a
-              href="https://github.com/yourusername"
+              href="https://github.com/debanga-r-hazarika"
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
@@ -36,7 +36,7 @@ export default function Hero() {
               <Github className="w-6 h-6" />
             </a>
             <a
-              href="https://linkedin.com/in/yourusername"
+              href="https://www.linkedin.com/in/eh-debanga-raz-hazarika/"
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
@@ -45,7 +45,7 @@ export default function Hero() {
               <Linkedin className="w-6 h-6" />
             </a>
             <a
-              href="mailto:Debangaraz2000@gmail.com"
+              href="mailto:debangaraz2000@gmail.com"
               className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
               aria-label="Email"
             >

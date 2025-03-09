@@ -4,6 +4,7 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Projects from './components/sections/Projects';
 import Skills from './components/sections/Skills';
+import Blog from './components/sections/Blog';
 import Contact from './components/sections/Contact';
 import FloatingNav from './components/layout/FloatingNav';
 import { AuthProvider } from './contexts/AuthContext';
@@ -34,6 +35,7 @@ function MainLayout() {
       <About />
       <Projects />
       <Skills />
+      <Blog />
       <Contact />
     </div>
   );

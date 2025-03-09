@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, X, LogOut } from 'lucide-react';
 import ProjectForm from './ProjectForm';
+import LinkedInPostsAdmin from './LinkedInPostsAdmin';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -100,6 +101,8 @@ export default function ProjectsAdmin() {
           </div>
         ))}
       </div>
+
+      <LinkedInPostsAdmin />
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
