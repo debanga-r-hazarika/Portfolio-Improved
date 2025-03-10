@@ -1,25 +1,40 @@
 # Modern Tech Portfolio
 
-A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features a clean design, dark mode support, and smooth animations to showcase professional work and skills.
+A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features a clean design, dark mode support, smooth animations, and an admin panel for dynamic content management. This portfolio showcases professional work, skills, and provides an interactive way to connect with visitors.
 
 ## 🚀 Features
 
+### Core Features
 - **Responsive Design**: Fully responsive layout that works seamlessly across all devices
-- **Dark Mode**: System-aware dark mode support with manual toggle
-- **Project Showcase**: Interactive grid layout for featuring projects
+- **Dark Mode**: System-aware dark mode support with manual toggle using React Context
+- **Project Showcase**: Interactive grid layout for featuring projects with dynamic content management
 - **Tech Stack Display**: Visual representation of technical skills and expertise
-- **Contact Form**: Interactive contact section with form validation
-- **Smooth Animations**: Subtle animations and transitions for enhanced user experience
+- **Contact Form**: Interactive contact section with form validation and EmailJS integration
+- **Smooth Animations**: Subtle scroll-based animations and transitions using Intersection Observer
 - **SEO Optimized**: Meta tags and semantic HTML for better search engine visibility
+
+### Admin Panel
+- **Secure Authentication**: Protected admin routes with JWT-based authentication
+- **Project Management**: CRUD operations for managing portfolio projects
+- **LinkedIn Integration**: Display and manage LinkedIn posts
+- **Content Editor**: Rich text editor for project descriptions
+- **Media Upload**: Image upload functionality for project thumbnails
 
 ## 🛠️ Technologies
 
-- **React**: Frontend library for building user interfaces
+### Frontend
+- **React 18**: Frontend library for building user interfaces
 - **TypeScript**: Type-safe JavaScript for better development experience
 - **Tailwind CSS**: Utility-first CSS framework for rapid UI development
 - **Vite**: Next-generation frontend tooling for faster development
 - **Lucide Icons**: Beautiful, consistent icon set
 - **React Context**: State management for theme and authentication
+
+### Integrations
+- **EmailJS**: Email service for contact form functionality
+- **Firebase**: Backend services for admin panel and data storage
+- **JWT**: Token-based authentication for admin access
+- **Intersection Observer**: Native API for scroll-based animations
 
 ## 📦 Project Structure
 
