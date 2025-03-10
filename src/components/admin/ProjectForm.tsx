@@ -38,6 +38,16 @@ export default function ProjectForm({ project, onSubmit, onClose }: ProjectFormP
   });
 
   const [tagInput, setTagInput] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageError, setImageError] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+
+  // Set image preview if project has an image
+  useEffect(() => {
+    if (project?.image) {
+      setImagePreview(project.image);
+    }
+  }, [project]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -84,7 +94,7 @@ export default function ProjectForm({ project, onSubmit, onClose }: ProjectFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Project Title
@@ -117,17 +127,67 @@ export default function ProjectForm({ project, onSubmit, onClose }: ProjectFormP
 
       <div>
         <label htmlFor="image" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Image URL
+          Image URL or Upload
         </label>
-        <input
-          type="url"
-          id="image"
-          name="image"
-          value={formData.image}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-        />
+        <div className="space-y-2">
+          <input
+            type="url"
+            id="image"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            placeholder="Enter image URL or upload below"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          />
+          <div className="flex items-center space-x-2">
+            <input
+              type="file"
+              id="imageUpload"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  if (file.size > 5 * 1024 * 1024) {
+                    setImageError('Image size should be less than 5MB');
+                    return;
+                  }
+                  setImageError('');
+                  setImageFile(file);
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result as string);
+                    setFormData(prev => ({ ...prev, image: reader.result as string }));
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="imageUpload"
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              Choose File
+            </label>
+            {imageFile && (
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {imageFile.name}
+              </span>
+            )}
+          </div>
+          {imageError && (
+            <p className="text-red-600 dark:text-red-400 text-sm">{imageError}</p>
+          )}
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="max-w-xs h-auto rounded-lg"
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <div>

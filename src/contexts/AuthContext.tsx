@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { fetchProjects, fetchLinkedInPosts, addProject, updateProject, deleteProject, addLinkedInPost, deleteLinkedInPost, initializeFirestoreData } from '../firebase';
 
 interface Project {
   id: string;
@@ -80,6 +81,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedPosts = localStorage.getItem('linkedInPosts');
     return storedPosts ? JSON.parse(storedPosts) : initialLinkedInPosts;
   });
+  
+  const [loading, setLoading] = useState(true);
+
+  // Initialize Firestore with default data if needed and fetch data
+  useEffect(() => {
+    const initializeData = async () => {
+      try {
+        // Initialize Firestore with default data if collections are empty
+        await initializeFirestoreData(initialProjects, initialLinkedInPosts);
+        
+        // Fetch data from Firestore
+        const firestoreProjects = await fetchProjects();
+        const firestorePosts = await fetchLinkedInPosts();
+        
+        if (firestoreProjects.length > 0) {
+          setProjects(firestoreProjects);
+        }
+        
+        if (firestorePosts.length > 0) {
+          setLinkedInPosts(firestorePosts);
+        }
+      } catch (error) {
+        console.error('Error initializing data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    initializeData();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('isAuthenticated', isAuthenticated.toString());
@@ -87,11 +118,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     localStorage.setItem('projects', JSON.stringify(projects));
-  }, [projects]);
+    
+    // Skip saving to Firestore during initial load
+    if (!loading) {
+      // Save projects to Firestore
+      projects.forEach(async (project) => {
+        if (project.id) {
+          await updateProject(project);
+        } else {
+          await addProject(project);
+        }
+      });
+    }
+  }, [projects, loading]);
 
   useEffect(() => {
     localStorage.setItem('linkedInPosts', JSON.stringify(linkedInPosts));
-  }, [linkedInPosts]);
+    
+    // Skip saving to Firestore during initial load
+    if (!loading) {
+      // First, fetch current posts to compare
+      fetchLinkedInPosts().then(currentPosts => {
+        // Find posts to add (in local but not in Firestore)
+        const postsToAdd = linkedInPosts.filter(localPost => 
+          !currentPosts.some(firestorePost => firestorePost.url === localPost.url)
+        );
+        
+        // Find posts to delete (in Firestore but not in local)
+        const postsToDelete = currentPosts.filter(firestorePost => 
+          !linkedInPosts.some(localPost => localPost.url === firestorePost.url)
+        );
+        
+        // Add new posts to Firestore
+        postsToAdd.forEach(async (post) => {
+          await addLinkedInPost(post);
+        });
+        
+        // Delete removed posts from Firestore
+        postsToDelete.forEach(async (post) => {
+          await deleteLinkedInPost(post.url);
+        });
+      });
+    }
+  }, [linkedInPosts, loading]);
 
   const login = (password: string) => {
     const isValid = password === ADMIN_PASSWORD;
