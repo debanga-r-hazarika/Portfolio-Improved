@@ -30,7 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // In a real application, this would be stored securely on the server
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_PASSWORD = 'Debanga@91';
 
 const initialLinkedInPosts = [
   {
