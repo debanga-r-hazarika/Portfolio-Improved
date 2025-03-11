@@ -1,6 +1,23 @@
 import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
 import { db } from './config';
-import { Project, LinkedInPost } from '../contexts/AuthContext';
+
+// Export types to make them available for import
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  links: {
+    github: string;
+    live: string;
+  };
+}
+
+export interface LinkedInPost {
+  url: string;
+  title: string;
+}
 
 // Collection references
 const projectsCollection = collection(db, 'projects');
@@ -13,7 +30,7 @@ export const fetchProjects = async (): Promise<Project[]> => {
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-    })) as Project[];
+    } as Project));
   } catch (error) {
     console.error('Error fetching projects:', error);
     return [];
@@ -26,7 +43,7 @@ export const addProject = async (project: Omit<Project, 'id'>): Promise<Project 
     return {
       id: docRef.id,
       ...project,
-    };
+    } as Project;
   } catch (error) {
     console.error('Error adding project:', error);
     return null;
@@ -59,10 +76,13 @@ export const deleteProject = async (projectId: string): Promise<boolean> => {
 export const fetchLinkedInPosts = async (): Promise<LinkedInPost[]> => {
   try {
     const snapshot = await getDocs(linkedInPostsCollection);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as LinkedInPost[];
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        url: data.url,
+        title: data.title,
+      } as LinkedInPost;
+    });
   } catch (error) {
     console.error('Error fetching LinkedIn posts:', error);
     return [];
@@ -73,8 +93,8 @@ export const addLinkedInPost = async (post: LinkedInPost): Promise<LinkedInPost 
   try {
     const docRef = await addDoc(linkedInPostsCollection, post);
     return {
-      id: docRef.id,
-      ...post,
+      url: post.url,
+      title: post.title,
     };
   } catch (error) {
     console.error('Error adding LinkedIn post:', error);

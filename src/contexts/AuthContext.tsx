@@ -1,39 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { fetchProjects, fetchLinkedInPosts, addProject, updateProject, deleteProject, addLinkedInPost, deleteLinkedInPost, initializeFirestoreData } from '../firebase';
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  tags: string[];
-  links: {
-    github: string;
-    live: string;
-  };
-}
-
-interface LinkedInPost {
-  url: string;
-  title: string;
-}
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  login: (password: string) => boolean;
-  logout: () => void;
-  projects: Project[];
-  setProjects: (projects: Project[]) => void;
-  linkedInPosts: LinkedInPost[];
-  setLinkedInPosts: (posts: LinkedInPost[]) => void;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
+import { 
+  fetchProjects, 
+  fetchLinkedInPosts, 
+  addProject, 
+  updateProject, 
+  deleteProject,
+  addLinkedInPost,
+  deleteLinkedInPost,
+  initializeFirestoreData,
+  Project,
+  LinkedInPost
+} from '../firebase/firestore';
 
 // In a real application, this would be stored securely on the server
 const ADMIN_PASSWORD = 'Debanga@91';
 
-const initialLinkedInPosts = [
+const initialLinkedInPosts: LinkedInPost[] = [
   {
     url: 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7301979138838409217',
     title: 'LinkedIn Post'
@@ -52,7 +34,7 @@ const initialLinkedInPosts = [
   }
 ];
 
-const initialProjects = [
+const initialProjects: Project[] = [
   {
     id: '1',
     title: "Expense Tracker",
@@ -66,25 +48,51 @@ const initialProjects = [
   }
 ];
 
+interface AuthContextType {
+  isAuthenticated: boolean;
+  login: (password: string) => boolean;
+  logout: () => void;
+  projects: Project[];
+  setProjects: (projects: Project[]) => void;
+  linkedInPosts: LinkedInPost[];
+  setLinkedInPosts: (posts: LinkedInPost[]) => void;
+  refreshProjects: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const stored = localStorage.getItem('isAuthenticated');
     return stored === 'true';
   });
   
-  const [projects, setProjects] = useState(() => {
+  const [projects, setProjects] = useState<Project[]>(() => {
     const storedProjects = localStorage.getItem('projects');
     return storedProjects ? JSON.parse(storedProjects) : initialProjects;
   });
 
-  const [linkedInPosts, setLinkedInPosts] = useState(() => {
+  const [linkedInPosts, setLinkedInPosts] = useState<LinkedInPost[]>(() => {
     const storedPosts = localStorage.getItem('linkedInPosts');
     return storedPosts ? JSON.parse(storedPosts) : initialLinkedInPosts;
   });
   
   const [loading, setLoading] = useState(true);
 
-  // Initialize Firestore with default data if needed and fetch data
+  // Refresh projects from Firestore
+  const refreshProjects = async () => {
+    try {
+      const firestoreProjects = await fetchProjects();
+      if (firestoreProjects.length > 0) {
+        setProjects(firestoreProjects);
+        localStorage.setItem('projects', JSON.stringify(firestoreProjects));
+      }
+    } catch (error) {
+      console.error('Error refreshing projects:', error);
+    }
+  };
+
+  // Sync data with Firestore on initial load
   useEffect(() => {
     const initializeData = async () => {
       try {
@@ -92,15 +100,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await initializeFirestoreData(initialProjects, initialLinkedInPosts);
         
         // Fetch data from Firestore
-        const firestoreProjects = await fetchProjects();
-        const firestorePosts = await fetchLinkedInPosts();
+        await refreshProjects();
         
-        if (firestoreProjects.length > 0) {
-          setProjects(firestoreProjects);
-        }
+        const firestorePosts = await fetchLinkedInPosts();
         
         if (firestorePosts.length > 0) {
           setLinkedInPosts(firestorePosts);
+          localStorage.setItem('linkedInPosts', JSON.stringify(firestorePosts));
         }
       } catch (error) {
         console.error('Error initializing data:', error);
@@ -112,54 +118,68 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initializeData();
   }, []);
 
+  // Sync projects to Firestore
   useEffect(() => {
-    localStorage.setItem('isAuthenticated', isAuthenticated.toString());
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    localStorage.setItem('projects', JSON.stringify(projects));
-    
-    // Skip saving to Firestore during initial load
-    if (!loading) {
-      // Save projects to Firestore
-      projects.forEach(async (project) => {
-        if (project.id) {
-          await updateProject(project);
-        } else {
-          await addProject(project);
+    const syncProjects = async () => {
+      if (!loading) {
+        try {
+          // Save to localStorage first
+          localStorage.setItem('projects', JSON.stringify(projects));
+          
+          // Sync with Firestore
+          for (const project of projects) {
+            if (project.id) {
+              await updateProject(project);
+            } else {
+              await addProject(project);
+            }
+          }
+        } catch (error) {
+          console.error('Error syncing projects:', error);
         }
-      });
-    }
+      }
+    };
+
+    syncProjects();
   }, [projects, loading]);
 
+  // Sync LinkedIn posts to Firestore
   useEffect(() => {
-    localStorage.setItem('linkedInPosts', JSON.stringify(linkedInPosts));
-    
-    // Skip saving to Firestore during initial load
-    if (!loading) {
-      // First, fetch current posts to compare
-      fetchLinkedInPosts().then(currentPosts => {
-        // Find posts to add (in local but not in Firestore)
-        const postsToAdd = linkedInPosts.filter(localPost => 
-          !currentPosts.some(firestorePost => firestorePost.url === localPost.url)
-        );
-        
-        // Find posts to delete (in Firestore but not in local)
-        const postsToDelete = currentPosts.filter(firestorePost => 
-          !linkedInPosts.some(localPost => localPost.url === firestorePost.url)
-        );
-        
-        // Add new posts to Firestore
-        postsToAdd.forEach(async (post) => {
-          await addLinkedInPost(post);
-        });
-        
-        // Delete removed posts from Firestore
-        postsToDelete.forEach(async (post) => {
-          await deleteLinkedInPost(post.url);
-        });
-      });
-    }
+    const syncLinkedInPosts = async () => {
+      if (!loading) {
+        try {
+          // Save to localStorage first
+          localStorage.setItem('linkedInPosts', JSON.stringify(linkedInPosts));
+          
+          // Fetch current posts to compare
+          const currentPosts = await fetchLinkedInPosts();
+          
+          // Find posts to add (in local but not in Firestore)
+          const postsToAdd = linkedInPosts.filter(localPost => 
+            !currentPosts.some(firestorePost => firestorePost.url === localPost.url)
+          );
+          
+          // Find posts to delete (in Firestore but not in local)
+          const postsToDelete = currentPosts.filter(firestorePost => 
+            !linkedInPosts.some(localPost => localPost.url === firestorePost.url)
+          );
+          
+          // Add new posts to Firestore
+          for (const post of postsToAdd) {
+            await addLinkedInPost(post);
+          }
+          
+          // Delete removed posts from Firestore
+          for (const post of postsToDelete) {
+            await deleteLinkedInPost(post.url);
+          }
+        } catch (error) {
+          console.error('Error syncing LinkedIn posts:', error);
+        }
+      }
+    };
+
+    syncLinkedInPosts();
   }, [linkedInPosts, loading]);
 
   const login = (password: string) => {
@@ -176,7 +196,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, projects, setProjects, linkedInPosts, setLinkedInPosts }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      login, 
+      logout, 
+      projects, 
+      setProjects, 
+      linkedInPosts, 
+      setLinkedInPosts,
+      refreshProjects 
+    }}>
       {children}
     </AuthContext.Provider>
   );

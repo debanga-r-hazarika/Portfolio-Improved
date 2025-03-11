@@ -3,15 +3,13 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // Replace with your actual Firebase API key
-  authDomain: "YOUR_AUTH_DOMAIN", // Replace with your Firebase auth domain
-  projectId: "YOUR_PROJECT_ID", // Replace with your Firebase project ID
-  storageBucket: "YOUR_STORAGE_BUCKET", // Replace with your Firebase storage bucket
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your Firebase messaging sender ID
-  appId: "YOUR_APP_ID", // Replace with your Firebase app ID
-  measurementId: "YOUR_MEASUREMENT_ID" // Replace with your Firebase measurement ID (optional)
+  apiKey: "AIzaSyBLyppH-FKXW0h0PwrQ8lWMty36DuoUl64",
+  authDomain: "personal-portfolio-94a7e.firebaseapp.com",
+  projectId: "personal-portfolio-94a7e",
+  storageBucket: "personal-portfolio-94a7e.firebasestorage.app",
+  messagingSenderId: "146285874562",
+  appId: "1:146285874562:web:17aec7658ffb46197e539b"
 };
 
 // Initialize Firebase

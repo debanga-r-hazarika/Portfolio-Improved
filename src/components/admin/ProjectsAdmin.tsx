@@ -4,6 +4,7 @@ import ProjectForm from './ProjectForm';
 import LinkedInPostsAdmin from './LinkedInPostsAdmin';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { addProject, updateProject, deleteProject } from '../../firebase/firestore';
 
 interface Project {
   id: string;
@@ -18,7 +19,7 @@ interface Project {
 }
 
 export default function ProjectsAdmin() {
-  const { projects, setProjects, logout } = useAuth();
+  const { projects, setProjects, logout, refreshProjects } = useAuth();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
@@ -33,15 +34,61 @@ export default function ProjectsAdmin() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteProject = (projectId: string) => {
+  const handleDeleteProject = async (projectId: string) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      setProjects(projects.filter(p => p.id !== projectId));
+      try {
+        // Delete from Firestore
+        await deleteProject(projectId);
+        
+        // Remove from local state
+        const updatedProjects = projects.filter(p => p.id !== projectId);
+        setProjects(updatedProjects);
+        
+        // Refresh projects from Firestore to ensure consistency
+        await refreshProjects();
+      } catch (error) {
+        console.error('Error deleting project:', error);
+        alert('Failed to delete project. Please try again.');
+      }
     }
   };
 
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
+  };
+
+  const handleProjectSubmit = async (projectData: Omit<Project, 'id'>) => {
+    try {
+      if (currentProject) {
+        // Update existing project in Firestore
+        const updatedProject = { ...projectData, id: currentProject.id };
+        await updateProject(updatedProject);
+        
+        // Update local state
+        const updatedProjects = projects.map(p =>
+          p.id === currentProject.id ? updatedProject : p
+        );
+        setProjects(updatedProjects);
+      } else {
+        // Add new project to Firestore
+        const newProjectRef = await addProject(projectData);
+        
+        if (newProjectRef) {
+          // Add to local state
+          const newProject = { ...projectData, id: newProjectRef.id };
+          setProjects([...projects, newProject]);
+        }
+      }
+      
+      // Refresh projects to sync with Firestore
+      await refreshProjects();
+      
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving project:', error);
+      alert('Failed to save project. Please try again.');
+    }
   };
 
   return (
@@ -118,21 +165,7 @@ export default function ProjectsAdmin() {
             </h3>
             <ProjectForm
               project={currentProject}
-              onSubmit={(projectData) => {
-                if (currentProject) {
-                  setProjects(projects.map(p =>
-                    p.id === currentProject.id
-                      ? { ...projectData, id: currentProject.id }
-                      : p
-                  ));
-                } else {
-                  setProjects([
-                    ...projects,
-                    { ...projectData, id: Date.now().toString() }
-                  ]);
-                }
-                setIsModalOpen(false);
-              }}
+              onSubmit={handleProjectSubmit}
               onClose={() => setIsModalOpen(false)}
             />
           </div>
