@@ -1,6 +1,6 @@
 # Modern Tech Portfolio
 
-A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features a clean design, dark mode support, smooth animations, and an admin panel for dynamic content management. This portfolio showcases professional work, skills, and provides an interactive way to connect with visitors.
+A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features a clean design, dark mode support, smooth animations, and an admin panel for dynamic content management.
 
 ## 🚀 Features
 
@@ -14,9 +14,8 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **SEO Optimized**: Meta tags and semantic HTML for better search engine visibility
 
 ### Admin Panel
-- **Secure Authentication**: Protected admin routes with JWT-based authentication
+- **Secure Authentication**: Protected admin routes with simple password-based login
 - **Project Management**: CRUD operations for managing portfolio projects
-- **LinkedIn Integration**: Display and manage LinkedIn posts
 - **Content Editor**: Rich text editor for project descriptions
 - **Media Upload**: Image upload functionality for project thumbnails
 
@@ -31,9 +30,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **React Context**: State management for theme and authentication
 
 ### Integrations
-- **EmailJS**: Email service for contact form functionality
 - **Firebase**: Backend services for admin panel and data storage
-- **JWT**: Token-based authentication for admin access
 - **Intersection Observer**: Native API for scroll-based animations
 
 ## 📦 Project Structure
@@ -54,8 +51,8 @@ src/
 
 1. **Clone the repository**
    ```bash
-   git clone [repository-url]
-   cd project
+   git clone https://github.com/debanga-r-hazarika/Portfolio-Improved.git
+   cd Portfolio-Improved
    ```
 
 2. **Install dependencies**
@@ -63,12 +60,17 @@ src/
    npm install
    ```
 
-3. **Start development server**
+3. **Set up Firebase**
+   - Create a Firebase project at https://console.firebase.google.com/
+   - Enable Firestore Database
+   - Replace the configuration in `src/firebase/config.ts` with your Firebase project credentials
+
+4. **Start development server**
    ```bash
    npm run dev
    ```
 
-4. **Build for production**
+5. **Build for production**
    ```bash
    npm run build
    ```
@@ -79,13 +81,18 @@ src/
 - **Content**: Update content in the components under `src/components/sections`
 - **Styling**: Adjust styles using Tailwind CSS classes or modify component styles
 
+## 🔐 Admin Access
+
+- **Login Password**: Hardcoded in `src/contexts/AuthContext.tsx`
+- **Default Password**: `Debanga@91`
+
 ## 📝 License
 
 This project is open source and available under the MIT License.
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check issues page.
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
 
 ## 📧 Contact
 
